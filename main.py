@@ -1,25 +1,24 @@
-try:
-   from colorama import Fore
-   import ctypes, pyautogui, keyboard, os, time, platform
-   from datetime import datetime
-except ImportError:
-    input("Error while importing modules. Please install the modules in requirements.txt")
+from colorama import Fore, init
+import ctypes
+import pyautogui
+import keyboard
+import os
+import time
+import platform
+from datetime import datetime
 
+init(autoreset=True)
 
 ascii_text = """        ___ _ __   __ _ _ __  
        / __| '_ \ / _` | '_ \ 
        \__ \ | | | (_| | |_) |
        |___/_| |_|\__,_| .__/    
                        |_|    """
-                       
-def onLinux():
-    if platform.system() == "Linux":
-        return True
-    else:
-        return False
 
-class snapchat:
+def on_linux():
+    return platform.system() == "Linux"
 
+class SnapchatBot:
     def __init__(self):
         self.sent_snaps = 0
         self.delay = 1.3
@@ -85,7 +84,7 @@ class snapchat:
         pyautogui.click()
         time.sleep(self.delay)
         pyautogui.moveTo(self.take_picture)
-        for i in range(7):
+        for _ in range(7):
             pyautogui.click()
             time.sleep(self.delay)
         pyautogui.moveTo(self.edit_send)
@@ -108,14 +107,16 @@ class snapchat:
         now = time.time()
         elapsed = str(now - self.started_time).split(".")[0]
         sent_snaps = self.sent_snaps * shortcut_users
-        if onLinux() == False:
-            ctypes.windll.kernel32.SetConsoleTitleW(f"Snapchat Score Botter | Sent Snaps: {sent_snaps} | Elapsed: {elapsed}s | Developed by @useragents on Github")
+        if not on_linux():
+            ctypes.windll.kernel32.SetConsoleTitleW(
+                f"Snapchat Score Botter | Sent Snaps: {sent_snaps} | Elapsed: {elapsed}s | Developed by @useragents on Github"
+            )
 
-    def print_console(self, arg, status = "Console"):
-        print(f"\n       {Fore.WHITE}[{Fore.RED}{status}{Fore.WHITE}] {arg}")
+    def print_console(self, message, status="Console"):
+        print(f"\n       {Fore.WHITE}[{Fore.RED}{status}{Fore.WHITE}] {message}")
     
     def main(self):
-        if onLinux() == False:
+        if not on_linux():
             os.system("cls")
             ctypes.windll.kernel32.SetConsoleTitleW("Snapchat Score Botter | Developed by @useragents on Github")
         else:
@@ -125,8 +126,6 @@ class snapchat:
 
         self.get_positions()
 
-        # Sometimes ran into "ValueError: invalid literal for int() with base 10: 'fffffffff2'"
-        # There should be a better solution for this but I am not a python dev - Chopper1337
         while True:
             try:
                 shortcut_users = int(input(f"\n       {Fore.WHITE}[{Fore.RED}Console{Fore.WHITE}] How many people are in this shortcut: "))
@@ -144,7 +143,7 @@ class snapchat:
         while True:
             if keyboard.is_pressed("f"):
                 break
-        if onLinux() == False:
+        if not on_linux():
             os.system("cls")
         else:
             os.system("clear")
@@ -158,5 +157,6 @@ class snapchat:
             time.sleep(4)
         self.print_console(f"Finished sending {self.sent_snaps} snaps.")
 
-obj = snapchat()
-obj.main()
+if __name__ == "__main__":
+    bot = SnapchatBot()
+    bot.main()
